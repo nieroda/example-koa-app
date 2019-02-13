@@ -5,13 +5,11 @@ const courseCatalogRouter = require('./routes/course_catalog/catalog_routes.js')
 
 const compose = require('koa-compose')
 
-//https://github.com/koajs
-///koa/blob/master/docs/
-//guide.md#middleware-best-practices
+//https://github.com/koajs/koa/blob/master/docs/guide.md#middleware-best-practices
 
 function combineRouters(routers) {
-  return () => {
 
+  return () => {
     routers = [...arguments]
     const middleware = []
 

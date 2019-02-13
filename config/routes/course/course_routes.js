@@ -8,38 +8,33 @@ const courseRouter = require('koa-router')({
 courseRouter.get('/:term/all-ge-courses', CourseController.allGECoursesForTerm, err => console.log(`allCourses ran into an error: ${err}`))
 courseRouter.get('/all-instructors', CourseController.allInstructors)
 
-courseRouter.get('/', CourseController.genericAll.bind({"db_table": "course_catalog"}))
+courseRouter.get('/', CourseController.genericAll.bind({
+  "db_table": "course_catalog"
+}))
 
 courseRouter.get('/:term/:subject/:catalog', CourseController.genericUnion.bind({
   "db_table": "course_base",
   "union": ["term", "subject", "catalog"]
 }))
 
+courseRouter.get('/:instructor_id/instructors', CourseController.genericUnion.bind({
+  "db_table": "course_instructors",
+  "union": ["instructor_id"]
+}))
+
+courseRouter.get('/:term', CourseController.genericUnion.bind({
+  "db_table": "course_base",
+  "union": ["term"]
+}))
+
+courseRouter.get("/:term/:subject", CourseController.genericUnion.bind({
+  "db_table": "course_base",
+  "union": ["term", "subject"]
+}))
+
 module.exports = courseRouter
 
 
-/*
-courseRouter.get('/') // return all courses
-  // select * from course_catalog;
-
-courseRouter.get('/:term') //return all courses for 'term'/ /courses/2193
-  // `select * from course_base where term = ?`
-
-
-courseRouter.get('/:term/:subject') // all course offered by ydeparment for term /courses/2193/CS
-  // `select * from course_base where term = ? and deparment = ?`
-
-
-courseRouter.get('/:term/:subject/:catalog') // /courses/2193/CS/385
-  // `select * FROM course_base WHERE term = ? AND subject = ? AND catalog = ?`
-
-courseRouter.get('/:instructor_id/instructors')
-  // select * FROM course_instructors WHERE instructor_id = ?
-
-courseRouter.get(':/term/ge_courses')
-
-
-*/
 
 // MariaDB [cs386_nkamm]> desc course_instructors
 //     -> ;

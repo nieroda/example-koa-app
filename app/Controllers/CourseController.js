@@ -12,16 +12,21 @@ class CourseController {
         console.log('Constructor of CourseController is called.');
     }
 
+    static formatBodySuccess(startTime, tuples) {
+      return {
+        'success': true,
+        'queryTime': new Date().getMilliseconds() - startTime.getMilliseconds(),
+        'count': tuples.length,
+        'data': tuples
+      }
+    }
+
     genericUnion(ctx) {
       return new Promise((resolve, reject) => {
 
         let startTime = new Date();
 
-
-        let {
-          db_table,
-          union
-        } = this
+        let { db_table, union } = this
 
         const query = `select * from ${db_table} WHERE ${
           union.map((value, idx) => {
@@ -29,7 +34,8 @@ class CourseController {
               return `${value} = ?;`
             return `${value} = ? AND `
           }).join('')}`
-          console.log(query)
+
+
         dbConnection.query({
           sql: query,
           values: union.map(item => ctx.params[item])
@@ -39,13 +45,10 @@ class CourseController {
             ctx.status = 200
             return reject(error)
           }
-          ctx.body = {
-            'success': true,
-            'queryTime': new Date().getMilliseconds() - startTime.getMilliseconds(),
-            'items': tuples.length,
-            teachers: tuples
-          }
+
+          ctx.body = CourseController.formatBodySuccess(startTime, tuples)
           ctx.status = 200
+
           return resolve()
         })
 
@@ -70,13 +73,9 @@ class CourseController {
             return reject(error)
           }
 
-          ctx.body = {
-            'success': true,
-            'queryTime': new Date().getMilliseconds() - startTime.getMilliseconds(),
-            'items': tuples.length,
-            'db_table': tuples
-          }
+          ctx.body = CourseController.formatBodySuccess(startTime, tuples)
           ctx.status = 200
+
           return resolve();
         })
       })
@@ -102,12 +101,8 @@ class CourseController {
             ctx.status = 200
             return reject(error)
           }
-          ctx.body = {
-            'success': true,
-            'queryTime': new Date().getMilliseconds() - startTime.getMilliseconds(),
-            'items': tuples.length,
-            teachers: tuples
-          }
+
+          ctx.body = CourseController.formatBodySuccess(startTime, tuples)
           ctx.status = 200
           return resolve()
         })
