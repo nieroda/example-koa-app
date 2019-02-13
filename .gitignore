@@ -1,0 +1,5 @@
+node_modules
+database/mySQLconnect.js
+.DS_Store
+package-lock.json
+
