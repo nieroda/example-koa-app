@@ -6,12 +6,22 @@ class Controller {
 
   constructor () { console.log('Constructor called for base class') }
 
+  static getTime(time) { new Date().getMilliseconds() - time.getMilliseconds() }
+
   static formatBodySuccess(startTime, tuples) {
     return {
       'success': true,
-      'queryTime': new Date().getMilliseconds() - startTime.getMilliseconds(),
+      'timeElapsed': Controller.getTime(startTime),
       'count': tuples.length,
       'data': tuples
+    }
+  }
+
+  static formatBodyError(startTime, error) {
+    return {
+      'success': false,
+      'timeElapsed': Controller.getTime(startTime),
+      error
     }
   }
 
@@ -35,7 +45,7 @@ class Controller {
         values: union.map(item => ctx.params[item])
       }, (error, tuples) => {
         if (error) {
-          ctx.body = []
+          ctx.body = Controller.formatBodyError(startTime)
           ctx.status = 200
           return reject(error)
         }
@@ -59,7 +69,7 @@ class Controller {
       }, (error, tuples) => {
         // anon functions don't bind this
         if (error) {
-          ctx.body = []
+          ctx.body = Controller.formatBodyError(startTime)
           ctx.status = 200
           return reject(error)
         }
