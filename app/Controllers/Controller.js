@@ -63,7 +63,11 @@ class Controller {
 
       let startTime = new Date();
 
-      const query = `select * from ${this.db_table}`
+      let { db_table } = this
+      let extra = this.extra || ""
+
+
+      const query = `select * from ${db_table} ${extra}`
       dbConnection.query({
         sql: query
       }, (error, tuples) => {
@@ -74,7 +78,7 @@ class Controller {
           return reject(error)
         }
 
-        ctx.body = CourseController.formatBodySuccess(startTime, tuples)
+        ctx.body = Controller.formatBodySuccess(startTime, tuples)
         ctx.status = 200
 
         return resolve();

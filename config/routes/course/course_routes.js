@@ -9,12 +9,13 @@ courseRouter.get('/:term/all-ge-courses', CourseController.allGECoursesForTerm, 
 courseRouter.get('/all-instructors', CourseController.allInstructors)
 
 courseRouter.get('/', CourseController.genericAll.bind({
-  "db_table": "course_catalog"
+  "db_table": "course_catalog",
+  "extra": "limit 100"
 }))
 
-courseRouter.get('/:term/:subject/:catalog', CourseController.genericUnion.bind({
+courseRouter.get('/:term/:department/:catalog', CourseController.genericUnion.bind({
   "db_table": "course_base",
-  "union": ["term", "subject", "catalog"]
+  "union": ["term", "department", "catalog"]
 }))
 
 courseRouter.get('/:instructor_id/instructors', CourseController.genericUnion.bind({
@@ -27,12 +28,19 @@ courseRouter.get('/:term', CourseController.genericUnion.bind({
   "union": ["term"]
 }))
 
+courseRouter.get('/:term/:department', CourseController.genericUnion.bind({
+  "db_table": "course_base",
+  "union": ["term", "department"]
+}))
+
 courseRouter.get("/:term/:subject", CourseController.genericUnion.bind({
   "db_table": "course_base",
   "union": ["term", "subject"]
 }))
 
 module.exports = courseRouter
+
+
 
 
 
