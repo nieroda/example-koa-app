@@ -38,6 +38,20 @@ module.exports = function (app) {
 };
 
 
+// 
+// SELECT *
+//   FROM course_base cb
+//   INNER JOIN
+//       course_components cc
+//       ON cb.class_number = cc.class_number
+//   LEFT JOIN
+//       meeting_pattern mp
+//       ON cc.class_number = mp.class_number
+//   LEFT JOIN
+//       course_instructors ci
+//       ON cc.class_number = ci.class_number
+//     WHERE cb.term = 2187
+
 // select cb.subject, cb.catalog, cc.section, cb.course_title,
 //        cb.units, cc.component, cc.class_number,
 //        ci.instructor_fName, ci.instructor_lName
